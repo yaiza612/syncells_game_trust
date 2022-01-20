@@ -10,7 +10,7 @@ A: Synthetic Community of five cells playing a game of trust. Each cell produces
 
 ## Pricipal Output of the Simulation
 
-In this simulation, the user can see the result of the interactions given the desired parameters.
+In this simulation, the user can see the result of the interactions given the default parameters.
 
 https://user-images.githubusercontent.com/62614099/150420686-5a7adc39-df4e-483d-8661-e2b93adb03cd.mp4
 
