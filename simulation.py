@@ -1,0 +1,35 @@
+from creation import quorum_signals
+from rules import survive_reproduce_or_die, diffusion
+import numpy as np
+
+
+def run_simulation(culture_medium, savings, current_quorum_signals, selfish_and_cooperative_cells, qs_production,
+                   diffusion_factor, threshold_for_survive, threshold_for_reproduce, iterations):
+    """
+    :param culture_medium: grid with all the cells types
+    :param savings: matrix with the savings of every cell
+    :param current_quorum_signals: matrix of quorum signals in the medium
+    :param selfish_and_cooperative_cells: matrix with selfish and cooperative cells
+    :param qs_production: amount of quorum signal produced by every cell
+    :param diffusion_factor: how much amount of a quorum signal diffuse in the medium
+    :param threshold_for_survive: amount of quorum signals you need for survive
+    :param threshold_for_reproduce: amount of quorum signals you need for reproduce yourself
+    :param iterations: how many time steps for running the simulation
+    :return: updated culture medium, current quorum signals and savings of the next time step
+    """
+    list_medium = [culture_medium]
+    list_qs = [current_quorum_signals]
+    list_savings = [savings]
+    for _ in range(iterations):
+        current_quorum_signals = diffusion(current_quorum_signals, diffusion_factor)
+        current_quorum_signals, savings = quorum_signals(current_quorum_signals, selfish_and_cooperative_cells,
+                                                         qs_production, savings)
+        culture_medium, current_quorum_signals = survive_reproduce_or_die(culture_medium, savings,
+                                                                          current_quorum_signals,
+                                                                          threshold_for_survive,
+                                                                          threshold_for_reproduce,
+                                                                          selfish_and_cooperative_cells)
+        list_medium.append(np.copy(culture_medium))
+        list_qs.append(np.copy(current_quorum_signals))
+        list_savings.append(np.copy(savings))
+    return list_medium, list_qs, list_savings
