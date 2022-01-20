@@ -3,7 +3,8 @@ Simulation of a synthetic community of cells playing the game of trust
 
 
 ## Graphical Description of the model
-![image](https://user-images.githubusercontent.com/62614099/150428629-2c9ab65c-9b93-4394-83db-000ead4081d3.png)
+![Model_scheme](https://user-images.githubusercontent.com/62614099/150428970-bf17a4b1-db3a-4108-8489-32478c4766ed.png)
+
 
 
 ## Pricipal Output of the Simulation
