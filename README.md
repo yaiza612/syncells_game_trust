@@ -1,4 +1,4 @@
-# syncells_game_trust
+# SynCells Game Trust
 Simulation of a synthetic community of cells playing the game of trust
 
 
