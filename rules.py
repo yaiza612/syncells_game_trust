@@ -50,15 +50,15 @@ def check_empty_neighbours(number_of_cells, medium):
     return current_empty_cells, number_of_neighbours
 
 
-def survive_reproduce_or_die(number_of_cells, medium, savings, current_qs, threshold_surveillance,
+def survive_reproduce_or_die(number_of_cells, medium, savings, current_qs, threshold_survivor,
                              threshold_reproduction, selfish_and_cooperative):
     """
     :param number_of_cells: number of different type of cells
     :param medium: grid where all the different cells live
     :param savings: every different type of cell produce a quorum signal that is partly saved
-     if the cell is cooperative and completely saved if the cell is selfish.
-    :param current_qs: actual concentration of quorum signal
-    :param threshold_surveillance: amount of quorum signals the cells need to be able to produce their proteins needed
+     if the cell is cooperative and completely saved if the cell is selfish; shape: (size, size)
+    :param current_qs: actual concentration of quorum signal; shape: (number_of_cells, size, size)
+    :param threshold_survivor: amount of quorum signals the cells need to be able to produce their proteins needed
     for surveillance
     :param threshold_reproduction: amount of quorum signals the cells need to be able to produce their proteins needed
     for reproduction
@@ -66,24 +66,41 @@ def survive_reproduce_or_die(number_of_cells, medium, savings, current_qs, thres
     :return: the updated grid for cells (medium) and quorum signals
     """
     n = medium.shape[1]
-    assert threshold_surveillance < threshold_reproduction  # threshold surveillance should be always smaller than
+    assert threshold_survivor < threshold_reproduction  # threshold surveillance should be always smaller than
     # threshold of reproduction
-    and_gate_with_savings = np.min(current_qs + medium[:number_of_cells] * savings, axis=0)
-    # and gate, all the cells need
-    # their own quorum signal and the quorum signals of the others to produce their proteins and survive
-    survivors = (and_gate_with_savings >= threshold_surveillance).astype(int)  # 0 if dead, else 1 ; shape: n,n
+    total_and_gates_with_savings = []
     for layer in range(number_of_cells):
-        medium[layer] = np.min((medium[layer], survivors), axis=0)
-        current_qs[layer] += savings * (
-                (1 - survivors) * medium[layer])  # the savings get release to the medium if the cell dies, since
-        # the membrane suffer a lysis.
+        signals_and_savings = []
         for other_cell_type in range(number_of_cells):
             if other_cell_type != layer:
-                current_qs[layer] -= survivors * threshold_surveillance * medium[other_cell_type]  # the cells consume
-                # the quorum signals
-    savings -= survivors * threshold_surveillance  # the cells consume the savings of their own quorum signal
+                signals_and_savings.append(current_qs[other_cell_type])
+        signals_and_savings.append(savings * medium[layer])
+        and_gate_with_savings = np.min(np.stack(signals_and_savings), axis=0)
+        total_and_gates_with_savings.append(and_gate_with_savings)
+        # and gate, all the cells need
+        # their own quorum signal and the quorum signals of the others to produce their proteins and survive
+        survivors = (and_gate_with_savings >= threshold_survivor).astype(int)  # 0 if dead, else 1 ; shape: n,n
+        dying_cells = np.min(((1 - survivors), medium[layer]), axis=0)
+        medium[-1] -= dying_cells
+        medium[layer] = np.min((medium[layer], survivors), axis=0)  # cells still alive
+        current_qs[layer] += savings * dying_cells
+        # the savings get release to the medium if the cell dies, since
+        # the membrane suffer a lysis.
+        savings -= savings * dying_cells
+        if np.min(savings) < 0:
+            print("abc" + str(layer))
+        for other_cell_type in range(number_of_cells):
+            if other_cell_type != layer:
+                current_qs[other_cell_type] -= threshold_survivor * medium[layer]  # the cells consume
+                # the quorum signals of other types
+        eaten_from_savings = np.min(((medium[layer] * threshold_survivor), (medium[layer] * savings)), axis=0)
+        savings -= eaten_from_savings  # the cells consume the savings of their own quorum signal
+        # current_qs[layer] -= np.max(0, )
+        if np.min(savings) < 0:
+            print("bcd" + str(layer))
+    total_and_gates_with_savings = np.sum(np.stack(total_and_gates_with_savings), axis=0)
     possible_reproducers = np.min((medium[number_of_cells],
-                                   (and_gate_with_savings >= threshold_reproduction).astype(int)),
+                                   (total_and_gates_with_savings >= threshold_reproduction).astype(int)),
                                   axis=0)  # 1 if potential to reproduce, else 0
     empty_cell_grid, number_n = check_empty_neighbours(number_of_cells, medium)
     random_order_indices = list(itertools.product(range(medium.shape[2]), repeat=2))
@@ -100,7 +117,7 @@ def survive_reproduce_or_die(number_of_cells, medium, savings, current_qs, thres
                 repro_layer = np.argmax(medium[:number_of_cells, idx[0], idx[1]])
                 if medium[repro_layer, idx[0], idx[1]] == 1:
                     medium[repro_layer, (idx[0] - random_direction[0]) % n, (idx[1] - random_direction[1]) % n] = 1
-                    medium[number_of_cells, (idx[0] - random_direction[0]) % n, (idx[1] - random_direction[1]) % n] = 1
+                    medium[-1, (idx[0] - random_direction[0]) % n, (idx[1] - random_direction[1]) % n] = 1
                     selfish_and_cooperative[repro_layer, (idx[0] - random_direction[0]) % n,
                                             (idx[1] - random_direction[1]) % n] = \
                         selfish_and_cooperative[repro_layer, idx[0], idx[1]]  # child is same as parent, inherit
@@ -109,10 +126,12 @@ def survive_reproduce_or_die(number_of_cells, medium, savings, current_qs, thres
                     for layer in range(number_of_cells):
                         for other_cell_type in range(number_of_cells):
                             if other_cell_type != layer:
-                                current_qs[layer, idx[0], idx[1]] -= \
-                                    (threshold_reproduction - threshold_surveillance) * \
-                                    medium[other_cell_type, idx[0], idx[1]]  # consume a bit more quorum signal
+                                current_qs[other_cell_type, idx[0], idx[1]] -= \
+                                    (threshold_reproduction - threshold_survivor) * \
+                                    medium[layer, idx[0], idx[1]]  # consume a bit more quorum signal
                                 # if reproduce
-                    savings[idx[0], idx[1]] -= (threshold_reproduction - threshold_surveillance)
+                    savings[idx[0], idx[1]] -= (threshold_reproduction - threshold_survivor)
+                    if np.min(savings) < 0:
+                        print("cde")
                     # consume a bit more of savings if reproduce
-    return medium, current_qs
+    return medium, current_qs, selfish_and_cooperative, savings

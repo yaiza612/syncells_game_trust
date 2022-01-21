@@ -44,15 +44,18 @@ def create_selfish_and_cooperative(number_of_cells, culture_medium, p_cooperativ
     return selfish_and_cooperative
 
 
-def quorum_signals(cooperativeness, quorum_signals_in_medium, selfish_and_cooperative, production, savings):
+def quorum_signals(cooperativeness, quorum_signals_in_medium, selfish_and_cooperative, production, savings, medium):
     """
-    :param cooperativeness: amount the cell share with the medium
-    :param quorum_signals_in_medium: grid with the quorum signals of the medium
-    :param selfish_and_cooperative: grid with the cells that are selfish and cooperative
-    :param production: amount of quorum signals produced
-    :param savings: amount of quorum signals saved
+    :param cooperativeness: amount the cell share with the medium; float
+    :param quorum_signals_in_medium: grid with the quorum signals of the medium; shape: (num_cells, size, size)
+    :param selfish_and_cooperative: grid with the cells that are selfish and cooperative; shape: (num_cells, size, size)
+    :param production: amount of quorum signals produced; float
+    :param savings: amount of quorum signals saved; shape: (size, size)
+    :param medium: alive cells per layer; shape: (num_cells + 1, size, size)
     :return: updated amount of quorum signal produced and updated savings
     """
-    quorum_signals_in_medium += production * selfish_and_cooperative
-    savings += cooperativeness + (1 - np.sum(selfish_and_cooperative, axis=0)) * (1-cooperativeness)
+    quorum_signals_in_medium += production * selfish_and_cooperative * medium[-1]
+    for selfish_and_cooperative_layer, medium_layer in zip(selfish_and_cooperative, medium):
+        savings += cooperativeness * medium_layer + \
+                   ((1 - selfish_and_cooperative_layer) * medium_layer) * (1-cooperativeness)
     return quorum_signals_in_medium, savings

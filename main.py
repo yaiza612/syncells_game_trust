@@ -1,7 +1,7 @@
 import argparse
 import numpy as np
 from creation import create_medium, create_savings, create_selfish_and_cooperative
-from visualization import make_fig
+from visualization import make_fig, auxiliary_data
 from simulation import run_simulation
 from datetime import datetime
 
@@ -14,28 +14,31 @@ def main(number_of_cells, cooperativeness, production, step, size, initial_densi
     quorum_signals_initial = np.ones((number_of_cells, size, size)) * initial_QS
     initial_savings = create_savings(size)
     q_signal = quorum_signals_initial
-    mediums, q_signals, savings = run_simulation(number_of_cells, cooperativeness,
-                                                 medium, initial_savings, q_signal, selfish_and_cooperative,
-                                                 production, diffusion_factor,
-                                                 threshold_survival, threshold_reproduction, step)
-    make_fig(number_of_cells, mediums, q_signals, savings, path_images_simulation,
+    mediums, q_signals, savings, selfish_and_cooperatives = \
+        run_simulation(number_of_cells, cooperativeness, medium, initial_savings, q_signal, selfish_and_cooperative,
+                       production, diffusion_factor, threshold_survival, threshold_reproduction, step)
+    make_fig(number_of_cells, mediums, q_signals, savings, selfish_and_cooperatives, path_images_simulation,
              path_additional_figures, name_video, timestamp)
-    param_strings = ["production", "step", "size", "initial_density", "cooperation", "threshold_survival",
+    param_strings = ["number of cells", "cooperativeness", "production", "step", "size", "initial_density",
+                     "cooperation", "threshold_survival",
                      "threshold_reproduction", "initial_QS", "diffusion_factor", "path_images_simulation",
                      "path_additional_figures", "name_video", "timestamp"]
-    params = [production, step, size, initial_density, cooperation, threshold_survival, threshold_reproduction,
+    params = [number_of_cells, cooperativeness, production, step, size, initial_density, cooperation,
+              threshold_survival, threshold_reproduction,
               initial_QS, diffusion_factor, path_images_simulation, path_additional_figures, name_video, timestamp]
-    with open(timestamp + "/log.txt", "w") as f:
+    # with open(timestamp + "/log.txt", "w") as f:
+    with open(timestamp + "/log.csv", "w") as g:
         for string, param in zip(param_strings, params):
-            f.write(string + ": " + str(param) + "\n")
+            # f.write(string + ": " + str(param) + "\n")
+            g.write(string + ", " + str(param) + "\n")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Variables to specify simulation')
-    parser.add_argument('-num', '--number_of_cells', default=5, help='Number of different types of cells', type=int
-                        , choices=range(2, 27))
-    parser.add_argument('-co', '--cooperativeness', default=0.2, help='Amount of QS shared', type=float)
-    parser.add_argument('-prod', '--production', default=1.5, help='amount of quorum signal that the cell produce',
+    parser.add_argument('-num', '--number_of_cells', default=5, help='Number of different populations of cells',
+                        type=int, choices=range(2, 27))
+    parser.add_argument('-co', '--cooperativeness', default=0.8, help='Amount of QS kept', type=float)
+    parser.add_argument('-prod', '--production', default=1.5, help='amount of quorum signal that the cell produces',
                         type=float)
     parser.add_argument('-s', '--step', default=100, help='steps of simulation', type=int)
     parser.add_argument('-n', '--size', default=20, help='size for the grid (square)', type=int)
@@ -55,7 +58,7 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--name_video', help='Name for save the video generated', default="video", type=str)
 
     args = parser.parse_args()
-    assert (0 <= args.initial_density * args.number_of_cells <= 1), "The initial density should be a number between 0"\
+    assert (0 <= args.initial_density * args.number_of_cells <= 1), "The initial density should be a number between 0" \
                                                                     " and 1 divided by the number of cell types "
     now = datetime.now()  # current date and time
     time_as_string = now.strftime("%m_%d_%Y__%H_%M_%S")
