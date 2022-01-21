@@ -50,5 +50,16 @@ A: Synthetic Community of five cells playing a game of trust. Each cell produces
 
 In this simulation, the user can see the result of the interactions given the default parameters.
 
-https://user-images.githubusercontent.com/62614099/150420686-5a7adc39-df4e-483d-8661-e2b93adb03cd.mp4
+
+https://user-images.githubusercontent.com/62614099/150576616-c9ac14fc-3919-4f1a-b44c-0bb5346d7225.mp4
+
+
+## Aditional Outputs 
+
+In the follow
+![cells](https://user-images.githubusercontent.com/62614099/150576714-02ad9285-330a-47fa-92fe-70c1cb0572d5.png)
+![selfish](https://user-images.githubusercontent.com/62614099/150576722-63660422-7fd5-4854-8c2a-b4553e194c6e.png)
+![quorum_signals](https://user-images.githubusercontent.com/62614099/150576718-cb1d8c85-7191-4e44-ab9e-5e94bd70740b.png)
+![savings](https://user-images.githubusercontent.com/62614099/150576720-dbfa1d84-398c-4e23-b8e2-b2b09c02cbe4.png)
+
 
