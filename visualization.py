@@ -7,15 +7,15 @@ import cv2
 import os
 
 
-def plot_medium(culture_medium):
+def plot_medium(number_of_cells, culture_medium):
     """
     Helper function to plot medium
     """
     fig, axis = plt.subplots()
     a = np.zeros_like(culture_medium[0])
-    for _ in range(5):
+    for _ in range(number_of_cells):
         a += (_ + 1) * culture_medium[_]
-    if np.max(a) > 5:
+    if np.max(a) > number_of_cells:
         print("error")
     # define color map
     set_colors = ["white", "aquamarine", "lightcoral", "blueviolet", "gold", "deepskyblue"]
@@ -30,7 +30,10 @@ def plot_medium(culture_medium):
                 data_3d[x, y, layer] = color_map[a[x, y]][layer]
     # print(data_3d.shape)
     axis.imshow(data_3d)
-    values = (0, 1, 2, 3, 4, 5)
+    values = range(number_of_cells + 1)
+    labels = {0: 'Empty'}
+    for key in range(1, number_of_cells + 1):
+        labels[key] = chr(64 + key)
     labels = {0: 'Empty', 1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E'}
     patches = [p.Patch(color=set_colors[i], label=labels[i]) for i in values]
     # put those patched as legend-handles into the legend
@@ -38,14 +41,14 @@ def plot_medium(culture_medium):
     return fig
 
 
-def auxiliary_data(culture_medium, current_qs, current_savings):
+def auxiliary_data(number_of_cells, culture_medium, current_qs, current_savings):
     """
     Helper function to plot other additional data
     """
     cell = []
     quorum_signal = []
     saved = []
-    for _ in range(5):
+    for _ in range(number_of_cells):
         number_cells = np.sum(culture_medium[_])
         number_qs = np.sum(current_qs[_])
         number_savings = np.sum(current_savings[_])
@@ -72,7 +75,7 @@ def create_video(image_folder, video_path, video_name):
     video.release()
 
 
-def make_fig(mediums, q_signals, savings, img_path, img_path_additional, video_name, time_as_string):
+def make_fig(number_of_cells, mediums, q_signals, savings, img_path, img_path_additional, video_name, time_as_string):
     size = mediums[0].shape[1]
     cell_amounts = defaultdict(list)
     q_signal_amounts = defaultdict(list)
@@ -85,10 +88,10 @@ def make_fig(mediums, q_signals, savings, img_path, img_path_additional, video_n
     num_digits_needed = int(np.ceil(np.log10(len(mediums))))
     # why not map the function?
     for _, (medium, q_signal, saving) in enumerate(zip(mediums, q_signals, savings)):
-        fig = plot_medium(medium)
+        fig = plot_medium(number_of_cells, medium)
         plt.savefig(time_as_string + "/" + img_path + "/medium_" + "{:0{width}}".format(_, width=num_digits_needed))
         plt.close(fig)
-        cells, qs, sv = auxiliary_data(medium, q_signal, saving)
+        cells, qs, sv = auxiliary_data(number_of_cells, medium, q_signal, saving)
         for idx, (cell, q, s) in enumerate(zip(cells, qs, sv)):
             cell_amounts[idx].append(cell / size ** 2)
             q_signal_amounts[idx].append(q / size ** 2)

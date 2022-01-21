@@ -3,9 +3,12 @@ from rules import survive_reproduce_or_die, diffusion
 import numpy as np
 
 
-def run_simulation(culture_medium, savings, current_quorum_signals, selfish_and_cooperative_cells, qs_production,
-                   diffusion_factor, threshold_for_survive, threshold_for_reproduce, iterations):
+def run_simulation(number_of_cells, cooperativeness, culture_medium, savings, current_quorum_signals,
+                   selfish_and_cooperative_cells, qs_production, diffusion_factor, threshold_for_survive,
+                   threshold_for_reproduce, iterations):
     """
+    :param number_of_cells: number of different types of cells
+    :param cooperativeness: amount of cooperation, how much QS the cell shares
     :param culture_medium: grid with all the cells types
     :param savings: matrix with the savings of every cell
     :param current_quorum_signals: matrix of quorum signals in the medium
@@ -22,9 +25,10 @@ def run_simulation(culture_medium, savings, current_quorum_signals, selfish_and_
     list_savings = [savings]
     for _ in range(iterations):
         current_quorum_signals = diffusion(current_quorum_signals, diffusion_factor)
-        current_quorum_signals, savings = quorum_signals(current_quorum_signals, selfish_and_cooperative_cells,
+        current_quorum_signals, savings = quorum_signals(cooperativeness,
+                                                         current_quorum_signals, selfish_and_cooperative_cells,
                                                          qs_production, savings)
-        culture_medium, current_quorum_signals = survive_reproduce_or_die(culture_medium, savings,
+        culture_medium, current_quorum_signals = survive_reproduce_or_die(number_of_cells, culture_medium, savings,
                                                                           current_quorum_signals,
                                                                           threshold_for_survive,
                                                                           threshold_for_reproduce,
