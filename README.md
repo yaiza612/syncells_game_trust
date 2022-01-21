@@ -41,7 +41,7 @@ A: Synthetic Community of five cells playing a game of trust. Each cell produces
 | Initial QS             | 1     |
 | Diffusion factor       | 0.1   |
 
-## Pricipal Output of the Simulation
+## Principal Output of the Simulation
 
 In this simulation, the user can see the result of the interactions given the default parameters.
 
