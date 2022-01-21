@@ -8,17 +8,17 @@ A: Synthetic Community of five cells playing a game of trust. Each cell produces
 
 ## Parameters available to play with
 
-*Number of different types of population's cells. (between 2 and 26) 
-*Cooperativeness: amount of QS kept, the rest is shared.
-*Production: amount of QS produced 
-*Step: number of time step to run the simulation
-*Size: size of the grid (culture medium)
-*Initial density: initial density of cells of every population 
-*Cooperation: Percentage of cells of the culture medium are cooperative.
-*Threshold survival: Amount of quorum signal the cell need to initiate the transcription of the protein and survive. 
-*Threshold reproduction:  Amount of quorum signal the cell need to initiate the transcription of the protein and reproduce. 
-*Initial QS: Amount of quorum signal available at the beginning in medium culture or grid.
-*Diffusion factor: Amount of quorum signal that diffuses in the medium culture or grid.
+* Number of different types of population's cells. (between 2 and 26) 
+* Cooperativeness: amount of QS kept, the rest is shared.
+* Production: amount of QS produced 
+* Step: number of time step to run the simulation
+* Size: size of the grid (culture medium)
+* Initial density: initial density of cells of every population 
+* Cooperation: Percentage of cells of the culture medium are cooperative.
+* Threshold survival: Amount of quorum signal the cell need to initiate the transcription of the protein and survive. 
+* Threshold reproduction:  Amount of quorum signal the cell need to initiate the transcription of the protein and reproduce. 
+* Initial QS: Amount of quorum signal available at the beginning in medium culture or grid.
+* Diffusion factor: Amount of quorum signal that diffuses in the medium culture or grid.
 
 ## Usage
 
