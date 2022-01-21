@@ -6,9 +6,13 @@ Simulation of a synthetic community of cells playing the game of trust.
 
 A: Synthetic Community of five cells playing a game of trust. Each cell produces a QS (quorum signal) but requires the neighbor's QS as well to activate the regulator that allows the transcription of proteins which each cell needs to survive and reproduce. Therefore, in this community every cell shares the QS with their neighbor cell. Nevertheless, sometimes some cells decide being selfish to prosper. B: Mechanism's transcription of the proteins needed for survival and reproduction. Represents an AND GATE; without the five different types of QS, the cell cannot transcribe the proteins.
 
+## Usage
+
+`python main.py`
+
 ## Parameters available to play with
 
-* Number of different types of population's cells. (between 2 and 26) 
+* Number of different types of population's cells. (between 2 and 26) `-num`
 * Cooperativeness: amount of QS kept, the rest is shared.
 * Production: amount of QS produced 
 * Step: number of time step to run the simulation
@@ -19,9 +23,6 @@ A: Synthetic Community of five cells playing a game of trust. Each cell produces
 * Threshold reproduction:  Amount of quorum signal the cell need to initiate the transcription of the protein and reproduce. 
 * Initial QS: Amount of quorum signal available at the beginning in medium culture or grid.
 * Diffusion factor: Amount of quorum signal that diffuses in the medium culture or grid.
-
-## Usage
-
 
 
 
