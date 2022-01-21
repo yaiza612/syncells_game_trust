@@ -1,5 +1,5 @@
 # SynCells Game Trust
-Simulation of a synthetic community of cells playing the game of trust
+Simulation of a synthetic community of cells playing the game of trust. 
 
 
 ## Graphical Description of the model
