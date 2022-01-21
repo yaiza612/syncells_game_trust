@@ -48,7 +48,7 @@ A: Synthetic Community of five cells playing a game of trust. Each cell produces
 
 ## Principal Output of the Simulation
 
-In this simulation, the user can see the result of the interactions given the default parameters.
+In this simulation, the user can see the result of the interactions (between the populations A, B, C, D, E) given the default parameters.
 
 
 https://user-images.githubusercontent.com/62614099/150576616-c9ac14fc-3919-4f1a-b44c-0bb5346d7225.mp4
