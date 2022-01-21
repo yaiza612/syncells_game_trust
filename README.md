@@ -54,7 +54,7 @@ In this simulation, the user can see the result of the interactions given the de
 https://user-images.githubusercontent.com/62614099/150576616-c9ac14fc-3919-4f1a-b44c-0bb5346d7225.mp4
 
 
-## Aditional Outputs 
+## Additional Outputs 
 
 ![cells](https://user-images.githubusercontent.com/62614099/150576714-02ad9285-330a-47fa-92fe-70c1cb0572d5.png)
 ![selfish](https://user-images.githubusercontent.com/62614099/150576722-63660422-7fd5-4854-8c2a-b4553e194c6e.png)
