@@ -1,9 +1,11 @@
 import argparse
-import numpy as np
-from creation import create_medium, create_savings, create_selfish_and_cooperative
-from visualization import make_fig, auxiliary_data
-from simulation import run_simulation
 from datetime import datetime
+
+import numpy as np
+
+from creation import create_medium, create_savings, create_selfish_and_cooperative
+from simulation import run_simulation
+from visualization import make_fig
 
 
 def main(number_of_cells, cooperativeness, production, step, size, initial_density, cooperation, threshold_survival,
@@ -26,11 +28,9 @@ def main(number_of_cells, cooperativeness, production, step, size, initial_densi
     params = [number_of_cells, cooperativeness, production, step, size, initial_density, cooperation,
               threshold_survival, threshold_reproduction,
               initial_QS, diffusion_factor, path_images_simulation, path_additional_figures, name_video, timestamp]
-    # with open(timestamp + "/log.txt", "w") as f:
-    with open(timestamp + "/log.csv", "w") as g:
+    with open(timestamp + "/log.txt", "w") as f:
         for string, param in zip(param_strings, params):
-            # f.write(string + ": " + str(param) + "\n")
-            g.write(string + ", " + str(param) + "\n")
+            f.write(string + ": " + str(param) + "\n")
 
 
 if __name__ == "__main__":
