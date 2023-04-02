@@ -51,7 +51,7 @@ def check_empty_neighbours(number_of_cells, medium):
 
 
 def survive_reproduce_or_die(number_of_cells, medium, savings, current_qs, threshold_survivor,
-                             threshold_reproduction, selfish_and_cooperative):
+                             threshold_reproduction, selfish_and_cooperative, generator):
     """
     :param number_of_cells: number of different type of cells
     :param medium: grid where all the different cells live
@@ -104,15 +104,12 @@ def survive_reproduce_or_die(number_of_cells, medium, savings, current_qs, thres
                                   axis=0)  # 1 if potential to reproduce, else 0
     empty_cell_grid, number_n = check_empty_neighbours(number_of_cells, medium)
     random_order_indices = list(itertools.product(range(medium.shape[2]), repeat=2))
-    random.shuffle(random_order_indices)
+    generator.shuffle(random_order_indices)
     for idx in random_order_indices:
         if possible_reproducers[idx[0], idx[1]] == 1:  # first check if they are able to reproduce
             if number_n[idx[0], idx[1]] < 8:  # then check if there is space to reproduce and where
                 direction_to_go = np.where(empty_cell_grid[:, idx[0], idx[1]] == 0)[0]
-                if len(direction_to_go) == 1:
-                    random_index_direction = direction_to_go[0]
-                else:
-                    random_index_direction = random.sample(list(direction_to_go), 1)[0]
+                random_index_direction = generator.choice(list(direction_to_go), 1)[0] # only one number in return
                 random_direction = combinations[random_index_direction]
                 repro_layer = np.argmax(medium[:number_of_cells, idx[0], idx[1]])
                 if medium[repro_layer, idx[0], idx[1]] == 1:

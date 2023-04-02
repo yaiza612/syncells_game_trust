@@ -5,7 +5,7 @@ import numpy as np
 
 def run_simulation(number_of_cells, cooperativeness, culture_medium, savings, current_quorum_signals,
                    selfish_and_cooperative_cells, qs_production, diffusion_factor, threshold_for_survive,
-                   threshold_for_reproduce, iterations):
+                   threshold_for_reproduce, iterations, generator):
     """
     :param number_of_cells: number of different types of cells
     :param cooperativeness: amount of cooperation, how much QS the cell shares
@@ -31,9 +31,10 @@ def run_simulation(number_of_cells, cooperativeness, culture_medium, savings, cu
                                                          culture_medium)
         culture_medium, current_quorum_signals, selfish_and_cooperative_cells, savings = \
             survive_reproduce_or_die(number_of_cells, culture_medium, savings, current_quorum_signals,
-                                     threshold_for_survive, threshold_for_reproduce, selfish_and_cooperative_cells)
+                                     threshold_for_survive, threshold_for_reproduce, selfish_and_cooperative_cells, generator)
         list_medium.append(np.copy(culture_medium))
         list_qs.append(np.copy(current_quorum_signals))
         list_savings.append(np.copy(savings))
         list_selfish_and_cooperative.append(np.copy(selfish_and_cooperative_cells))
     return list_medium, list_qs, list_savings, list_selfish_and_cooperative
+
